@@ -22,7 +22,7 @@ namespace AdventOfCode17
                   .Select(index => list.Where((item, idx) => ((1 << idx) & index) != 0).ToList());
 
                 //PART 1
-                var combinationsSatysfying = result.ToList().Where(comb => comb.Sum() == 150);
+                var combinationsSatysfying = result.Where(comb => comb.Sum() == 150);
 
                 //PART 2
                 var minCount = combinationsSatysfying.Min(comb => comb.Count());
