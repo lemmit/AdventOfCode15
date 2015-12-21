@@ -21,13 +21,28 @@ namespace AdventOfCode12
             System.Console.ReadLine();
         }
 
+        static bool IsPropertyOfTypeAndValue(JToken token, JTokenType type, string val)
+        {
+            return token.ToList().Any(subtoken => subtoken.Type == type 
+                                      && subtoken.Value<string>() == val);
+        }
+
+        static bool HasPropertyWhere(JToken root, Func<JToken, bool> predicate)
+        {
+           return root.ToList().Any(token =>
+                                    token.Type == JTokenType.Property
+                                    && predicate(token));
+        }
+
+        static bool TokenContainsRedItem(JToken token)
+        {
+            return HasPropertyWhere(token, 
+                    (property) => IsPropertyOfTypeAndValue(property, JTokenType.String, "red"));
+        }
+
         static int TraverseFun(JToken root)
         {
-            if (root.ToList().Any(token =>
-                                    token.Type == JTokenType.Property
-                                    && token.ToList().Any(
-                                        subtoken => subtoken.Type == JTokenType.String 
-                                                        && subtoken.Value<string>() == "red")))
+            if (TokenContainsRedItem(root))
             {
                 return 0;
             }
