@@ -69,5 +69,15 @@ namespace AdventOfCode.Toolkit
                 index++;
             }
         }
+
+        public static IDictionary<TKey,TValue> ToDictionary<TKey,TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> keyValuePairs)
+        {
+            IDictionary<TKey, TValue> dict = new Dictionary<TKey, TValue>();
+            foreach(var keyValuePair in keyValuePairs)
+            {
+                dict.Add(keyValuePair);
+            }
+            return dict;
+        }
     }
 }
