@@ -41,5 +41,15 @@ namespace AdventOfCode.Toolkit
             }
             return list;
         }
+
+        public static long Product(this List<int> list) 
+        {
+            long product = 1;
+            foreach(var elem in list)
+            {
+                product *= elem;
+            }
+            return product;
+        }
     }
 }
