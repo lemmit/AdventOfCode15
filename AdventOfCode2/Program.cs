@@ -14,10 +14,10 @@ namespace AdventOfCode2
         {
             using(var file = new StreamReader("../../input.txt"))
             {
-
-                //var sum = FirstPart(file);
-                var sum = SecondPart(file);
-                System.Console.WriteLine($"Elves will need {sum} sq. feet");
+                var fsum = FirstPart(file);
+                System.Console.WriteLine($"[1 part] Elves will need {fsum} sq. feet");
+                var ssum = SecondPart(file);
+                System.Console.WriteLine($"[2 part] Elves will need {ssum} sq. feet");
             }
             System.Console.ReadLine();
         }
