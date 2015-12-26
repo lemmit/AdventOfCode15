@@ -8,32 +8,6 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode3
 {
-
-    public class SantaPositionWithPath
-    {
-        public Tuple<int, int> Position { get; set; } = new Tuple<int, int>(0, 0);
-        public Dictionary<Tuple<int, int>, int> Path { get; set; } = new Dictionary<Tuple<int, int>, int>();
-    };
-
-    public enum Turn
-    {
-        Santa,
-        Robot
-    }
-
-    public class SantaAndRobotPositionWithPathsAndTurnInfo
-    {
-        public Tuple<int, int> SantaPosition { get; set; } = new Tuple<int, int>(0, 0);
-        public Tuple<int, int> RobotPosition { get; set; } = new Tuple<int, int>(0, 0);
-        public Dictionary<Tuple<int, int>, int> Path { get; set; } = new Dictionary<Tuple<int, int>, int>();
-        public Turn Turn { get; set; }
-        public void NextTurn()
-        {
-            if (Turn == Turn.Robot) Turn = Turn.Santa;
-            else Turn = Turn.Robot;
-        }
-    }
-
     class Program
     {
         static void Main(string[] args)
