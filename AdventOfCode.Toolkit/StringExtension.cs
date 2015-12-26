@@ -20,5 +20,27 @@ namespace AdventOfCode.Toolkit
                 yield return index;
             }
         }
+
+        public static int CountOfVowels(this string str)
+        {
+            var vowels = "aeiou";
+            return vowels.Select(vowel => str.AllIndexesOf(vowel.ToString()).Count()).Sum();
+        }
+
+        public static IEnumerable<Tuple<char, char>> SubsequentLetterPairs(this string str)
+        {
+            for (var i = 0; i < str.Length - 1; i++)
+            {
+                yield return new Tuple<char, char>(str[i], str[i + 1]);
+            }
+        }
+
+        public static IEnumerable<Tuple<char, char>> LettersPairsWithGap(this string str)
+        {
+            for (var i = 0; i < str.Length - 2; i++)
+            {
+                yield return new Tuple<char, char>(str[i], str[i + 2]);
+            }
+        }
     }
 }

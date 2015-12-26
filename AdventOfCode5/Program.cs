@@ -14,68 +14,54 @@ namespace AdventOfCode5
         {
             using(var file = new StreamReader("../../input.txt"))
             {
-                //var sum = FirstPart(file);
-                var sum = SecondPart(file);
-                System.Console.WriteLine(sum);
+                var input = file.ForEachLine(line => line).ToList();
+                
+                RuleChecker ruleChecker = GetRuleCheckerForFirstPart();
+                var numberOfNiceStrings = input
+                        .Select((line) => ruleChecker.Check(line) ? 1 : 0)
+                        .Sum();
+                System.Console.WriteLine($"[Part 1] Number of nice strings: {numberOfNiceStrings}");
+
+                ruleChecker = GetRuleCheckerForSecondPart();
+                var numberOfNiceStrings2ndPart = input
+                        .Select((line) => ruleChecker.Check(line) ? 1 : 0)
+                        .Sum();
+                System.Console.WriteLine($"[Part 2] Number of nice strings: {numberOfNiceStrings2ndPart}");
             }
             System.Console.ReadLine();
-            System.Console.ReadLine();
         }
 
-        static IEnumerable<string> GetPairs(string str)
+        private static readonly Func<string, bool> DebugRule = 
+            (str) => { System.Console.WriteLine($"[DEBUG] {str}"); return true; };
+
+        private static RuleChecker GetRuleCheckerForFirstPart()
         {
-            for(int i=0; i<str.Length-1; i++)
-            {
-                yield return str[i].ToString() + str[i + 1].ToString();
-            }
+            return new RuleChecker()
+                .AddRule(str => !str.Contains("ab"))
+                .AddRule(str => !str.Contains("cd"))
+                .AddRule(str => !str.Contains("pq"))
+                .AddRule(str => !str.Contains("xy"))
+                .AddRule(str => str.CountOfVowels() >= 3)
+                .AddRule(str => str.SubsequentLetterPairs()
+                                    .Select(pair => pair.Item1 == pair.Item2 ? 1 : 0)
+                                    .Sum() > 0)
+                ;
         }
 
-        static int SecondPart(StreamReader sw)
+        private static RuleChecker GetRuleCheckerForSecondPart()
         {
-            return sw.ForEachLine((line) =>
-            {
-                var strings = GetPairs(line);
-                var pairs = strings.ToList()
-                        .Select((pair) => line.AllIndexesOf(pair).Count() >= 2)
-                        .Count( (pair) => pair);
-                var lettersWithAnotherBetween = false;
-                for(int i=0; i<line.Length - 2; i++)
-                {
-                    if(line[i] == line[i + 2])
-                    {
-                        lettersWithAnotherBetween = true;
-                        break;
-                    }
-                }
-                var nice = (pairs > 0 && lettersWithAnotherBetween) ? 1 : 0;
-                System.Console.WriteLine($"{line} is nice={nice} because { pairs > 0 } and { lettersWithAnotherBetween } ");
-                return nice;
-            }).Sum();
+            return new RuleChecker()
+                    .AddRule((str) => str
+                            .SubsequentLetterPairs()
+                            // ("a","d"), ("e", "f"), ("g", "e") ...
+                            .Select(pair => pair.Item1.ToString() + pair.Item2.ToString())
+                            //"ad", "ef", "ge" ...
+                            .Any(pair => str.AllIndexesOf(pair).Count() >= 2))
+                    .AddRule((str) => str
+                            .LettersPairsWithGap()
+                            .Count( (pairWithGap) => pairWithGap.Item1 == pairWithGap.Item2) > 0)
+                ;
         }
 
-        static int FirstPart(StreamReader sw)
-        {
-            return sw.ForEachLine((line) =>
-            {
-                if (line.Contains("ab") || line.Contains("cd") || line.Contains("pq") || line.Contains("xy"))
-                    return 0;
-                var vowels = 0;
-                "aeiou".ToList().ForEach((c) => vowels += line.AllIndexesOf(c.ToString()).Count());
-                var anyDouble = false;
-                for (var i = 0; i < line.Length - 1; i++)
-                {
-                    if (line[i] == line[i + 1])
-                    {
-                        anyDouble = true;
-                        break;
-                    }
-                }
-                if (vowels >= 3 && anyDouble)
-                {
-                    return 1;
-                }
-                return 0;
-            }).Sum();
-        }
     }
 }
