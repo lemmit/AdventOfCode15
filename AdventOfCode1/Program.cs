@@ -14,30 +14,24 @@ namespace AdventOfCode1
             using(var sr = new StreamReader("../../input.txt"))
             {
                 var input = sr.ReadLine();
-                int closing = 0;
-                int opening = 0;
-                bool inBasement = false;
-                for(int i=0; i<input.Length; i++)
-                {
-                    var character = input[i];
-                    switch (character)
-                    {
-                        case '(':
-                            opening++;
-                            break;
-                        case ')':
-                            closing++;
-                            break;
-                    }
-                    if(opening-closing < 0 && !inBasement)
-                    {
-                        System.Console.WriteLine($"Santa entered the basement: {i+1}");
-                        inBasement = true;
-                    }
-                }
-                System.Console.WriteLine($"Final floor: {opening - closing}");
+
+                System.Console.WriteLine("** First solver");
+                IElevator solver = new Elevator_Functional(input);
+                SolveChallenge(solver);
+
+                System.Console.WriteLine("\n** Second(functional) solver");
+                solver = new Elevator(input);
+                SolveChallenge(solver);
             }
             System.Console.ReadLine();
+        }
+
+        private static void SolveChallenge(IElevator solver)
+        {
+            var final = solver.FinalFloor();
+            var gotToBasement = solver.WhenGotToBasement();
+            System.Console.WriteLine($"Final floor: {final}");
+            System.Console.WriteLine($"First time in basement: {gotToBasement}");
         }
     }
 }
