@@ -43,8 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractSantaGridWalker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FunctionalSantaGridWalker.cs" />
+    <Compile Include="SantaGridWalker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -54,6 +57,12 @@
     <Content Include="test3.txt" />
     <Content Include="test2.txt" />
     <Content Include="test1.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AdventOfCode.Toolkit\AdventOfCode.Toolkit.csproj">
+      <Project>{94e2724d-3a7d-44a3-9c10-bc8744bf7b3c}</Project>
+      <Name>AdventOfCode.Toolkit</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

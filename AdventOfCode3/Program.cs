@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdventOfCode.Toolkit;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,62 +8,57 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode3
 {
+
+    public class SantaPositionWithPath
+    {
+        public Tuple<int, int> Position { get; set; } = new Tuple<int, int>(0, 0);
+        public Dictionary<Tuple<int, int>, int> Path { get; set; } = new Dictionary<Tuple<int, int>, int>();
+    };
+
+    public enum Turn
+    {
+        Santa,
+        Robot
+    }
+
+    public class SantaAndRobotPositionWithPathsAndTurnInfo
+    {
+        public Tuple<int, int> SantaPosition { get; set; } = new Tuple<int, int>(0, 0);
+        public Tuple<int, int> RobotPosition { get; set; } = new Tuple<int, int>(0, 0);
+        public Dictionary<Tuple<int, int>, int> Path { get; set; } = new Dictionary<Tuple<int, int>, int>();
+        public Turn Turn { get; set; }
+        public void NextTurn()
+        {
+            if (Turn == Turn.Robot) Turn = Turn.Santa;
+            else Turn = Turn.Robot;
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
-            var dict = new Dictionary<Tuple<int, int>, int>();
-            var sentinel = 24122015;
             using (var sw = new StreamReader("../../input.txt"))
             {
                 var line = sw.ReadLine();
-                var santaPosition = new Tuple<int, int>(0, 0);
-                var roboPosition = new Tuple<int, int>(0, 0);
-                dict[santaPosition] = sentinel;
-                var santa = true;
-                for (int i=0; i < line.Length; i++)
-                {
-                    Tuple<int, int> position;
-                    if (santa)
-                    {
-                        position = santaPosition;
-                    }else
-                    {
-                        position = roboPosition;
-                    }
-                    var c = line[i];
-                    switch (c)
-                    {
-                        case '<':
-                            position = new Tuple<int, int>(position.Item1 - 1, position.Item2);
-                            break;
-                        case '>':
-                            position = new Tuple<int, int>(position.Item1 + 1, position.Item2);
-                            break;
-                        case '^':
-                            position = new Tuple<int, int>(position.Item1, position.Item2 + 1);
-                            break;
-                        case 'v':
-                            position = new Tuple<int, int>(position.Item1, position.Item2 - 1);
-                            break;
-                    }
-                    dict[position] = sentinel;
-                    if (santa)
-                    {
-                        santaPosition = position;
-                    }
-                    else
-                    {
-                        roboPosition = position;
-                    }
+                System.Console.WriteLine("** Solution");
 
-                    santa = !santa;
-                    
-                }
-                var housesCount = dict.Keys.Count();
-                System.Console.WriteLine($"{housesCount} houses received at least one present");
+                AbstractSantaGridWalker walker = new SantaGridWalker(line);
+                Solve(walker);
+                System.Console.WriteLine("\n** Solution(functional)");
+                walker = new FunctionalSantaGridWalker(line);
+                Solve(walker);
+
             }
             System.Console.ReadLine();
+        }
+
+        private static void Solve(AbstractSantaGridWalker walker)
+        {
+            var alone = walker.VisitedHousesIfWalkAlone();
+            var withRobot = walker.VisitedHousesIfWalkWithRobot();
+            System.Console.WriteLine($"[Walks alone] {alone} houses received at least one present");
+            System.Console.WriteLine($"[Walks with robot] {withRobot} houses received at least one present");
         }
     }
 }

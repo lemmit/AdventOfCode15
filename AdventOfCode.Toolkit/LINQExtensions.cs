@@ -79,5 +79,14 @@ namespace AdventOfCode.Toolkit
             }
             return dict;
         }
+
+        public static R Fold<T, R>(this IEnumerable<T> enumerable, R state, Func<T, R, R> func)
+        {
+            foreach(var elem in enumerable)
+            {
+                state = func(elem, state);
+            }
+            return state;
+        }
     }
 }
