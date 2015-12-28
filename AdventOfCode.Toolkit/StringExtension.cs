@@ -29,17 +29,16 @@ namespace AdventOfCode.Toolkit
 
         public static IEnumerable<Tuple<char, char>> SubsequentLetterPairs(this string str)
         {
-            for (var i = 0; i < str.Length - 1; i++)
-            {
-                yield return new Tuple<char, char>(str[i], str[i + 1]);
+            foreach(var pair in str.LettersPairsWithGap(0)) {
+                yield return pair;
             }
         }
 
-        public static IEnumerable<Tuple<char, char>> LettersPairsWithGap(this string str)
+        public static IEnumerable<Tuple<char, char>> LettersPairsWithGap(this string str, int gap = 1)
         {
-            for (var i = 0; i < str.Length - 2; i++)
+            for (var i = 0; i < str.Length - gap - 1; i++)
             {
-                yield return new Tuple<char, char>(str[i], str[i + 2]);
+                yield return new Tuple<char, char>(str[i], str[i + gap + 1]);
             }
         }
     }
