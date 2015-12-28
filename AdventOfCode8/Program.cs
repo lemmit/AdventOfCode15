@@ -16,46 +16,35 @@ namespace AdventOfCode8
         {
             using (var file = new StreamReader("../../input.txt"))
             {
-                //var interpretedSum = FirstPart(file);
-                var interpretedSum = SecondPart(file);
-                Console.WriteLine($"Sub: {interpretedSum}");
+                var input = file.ForEachLine(line => line).ToList();
+                var interpretedSum = FirstPart(input);
+                Console.WriteLine($"First Part: {interpretedSum}");
+                interpretedSum = SecondPart(input);
+                Console.WriteLine($"Second Part: {interpretedSum}");
             }
-
             Console.ReadLine();
         }
 
-        static int SecondPart(StreamReader file)
+        static int SecondPart(List<string> input)
         {
-            var interpretedSum = file.ForEachLine((line) => {
-                //var hexValues = new Regex("\\\\x([0-9A-Fa-f]){2}").Matches(line).Count;
+            var interpretedSum = input.Select((line) => {
                 var backslashes = line.AllIndexesOf("\\").Count();
                 var backslashQuote = line.AllIndexesOf("\"").Count();
                 var interpreted = backslashQuote + backslashes + 2;
-                //Console.WriteLine(line);
-                //Console.WriteLine($"{backslashes} + {backslashQuote} + 2 + 2 = {interpreted}");
                 return interpreted;
             }).Sum();
             return interpretedSum;
         }
 
-        static int FirstPart(StreamReader file)
+        static int FirstPart(List<string> input)
         {
-            var interpretedSum = file.ForEachLine((line) =>
+            var interpretedSum = input.Select((line) =>
             {
-                //counter += line.Length;
-                var interpreted = 0;
                 var backslashes = line.AllIndexesOf("\\\\").Count(); // \\
                 line = line.Replace("\\\\", "#");
                 var backslashQuote = line.AllIndexesOf("\\\"").Count(); // \"
                 var hexValues = new Regex("\\\\x([0-9A-Fa-f]){2}").Matches(line).Count;
-                var backHexValues = 0;// new Regex("\\\\\\x([0-9A-Fa-f]){2}").Matches(line).Count;
-                                      //var hexValues = line.AllIndexesOf("\\x").Count()*3; // \x66
-                interpreted += backslashes;
-                interpreted += backslashQuote;
-                interpreted += hexValues * 3 - backHexValues * 3;
-                interpreted += 2; // ""
-                Console.WriteLine(line);
-                Console.WriteLine($"{backslashes} + {backslashQuote} + {hexValues} - {backHexValues} = {interpreted}");
+                var interpreted = backslashes + backslashQuote + hexValues * 3 + 2; // ""
                 return interpreted;
             }).Sum();
 
