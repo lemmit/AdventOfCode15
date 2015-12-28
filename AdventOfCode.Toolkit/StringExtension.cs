@@ -41,5 +41,12 @@ namespace AdventOfCode.Toolkit
                 yield return new Tuple<char, char>(str[i], str[i + gap + 1]);
             }
         }
+
+        public static string Capitalize(this string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                throw new ArgumentException();
+            return input.First().ToString().ToUpper() + String.Join("", input.Skip(1));
+        }
     }
 }
