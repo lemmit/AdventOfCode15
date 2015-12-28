@@ -43,6 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CityPair.cs" />
+    <Compile Include="CityPairEqualityComparer.cs" />
+    <Compile Include="CityPairWithDistanceFactory.cs" />
+    <Compile Include="DataWithDistance.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -54,6 +58,10 @@
       <Project>{94e2724d-3a7d-44a3-9c10-bc8744bf7b3c}</Project>
       <Name>AdventOfCode.Toolkit</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="input.txt" />
+    <Content Include="test1.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

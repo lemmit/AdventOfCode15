@@ -51,5 +51,17 @@ namespace AdventOfCode.Toolkit
             }
             return product;
         }
+
+        public static void PrintStringList(this List<string> list)
+        {
+            var strBuilder = new StringBuilder();
+            foreach (var str in list)
+            {
+                strBuilder.Append(str);
+                if (str != list.Last())
+                    strBuilder.Append("-> ");
+            }
+            Console.WriteLine(strBuilder.ToString().PadLeft(45));
+        }
     }
 }

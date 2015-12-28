@@ -88,5 +88,28 @@ namespace AdventOfCode.Toolkit
             }
             return state;
         }
+
+        public static Tuple<T,T> MinMaxElement<T>(this IEnumerable<T> enumerable, Func<T, int> selector)
+        {
+            var min = int.MaxValue;
+            var max = int.MinValue;
+            var maxElem = default(T);
+            var minElem = default(T);
+            foreach (var elem in enumerable)
+            {
+                var len = selector(elem);
+                if (len < min)
+                {
+                    min = len;
+                    minElem = elem;
+                }
+                if (len > max)
+                {
+                    max = len;
+                    maxElem = elem;
+                }
+            }
+            return new Tuple<T, T>(minElem, maxElem);
+        }
     }
 }
