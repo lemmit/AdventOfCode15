@@ -40,8 +40,7 @@ namespace AdventOfCode14
                 new Reindeer { Name = "Dancer", Speed = 37, FlyingTimeBeforeRest = 1, RestTime = 36 },
             };
             int seconds = 2503;
-
-            
+ 
             //var fastestReindeer = FindReindeerWithHighestDistanceTraveledAfterSeconds(reindeers, seconds).First();
             //System.Console.WriteLine($"Fastest reindeer is {fastestReindeer.Item1.Name}, and traveled {fastestReindeer.Item2}km");
              
@@ -77,17 +76,7 @@ namespace AdventOfCode14
             var scores = new List< Tuple<Reindeer, int> >();
             foreach (var reindeer in reindeers)
             {
-                int cycle = reindeer.FlyingTimeBeforeRest + reindeer.RestTime;
-                int numberOfCycles = seconds / cycle;
-                int distance = numberOfCycles * reindeer.FlyingTimeBeforeRest * reindeer.Speed;
-                int leftSeconds = seconds - numberOfCycles * cycle;
-                if (leftSeconds >= reindeer.FlyingTimeBeforeRest)
-                {
-                    distance += reindeer.FlyingTimeBeforeRest * reindeer.Speed;
-                }else if(leftSeconds > 0)
-                {
-                    distance += leftSeconds * reindeer.Speed;
-                }
+                int distance = ReindeerTraveledAfterSeconds(seconds, reindeer);
                 scores.Add(new Tuple<Reindeer, int>(reindeer, distance));
                 //System.Console.WriteLine($"Reindeer {reindeer.Name} traveled {distance}kms after {seconds}s.");
             }
@@ -96,6 +85,24 @@ namespace AdventOfCode14
             int maxDistance = scores.Last().Item2;
             var fastestReindeers = scores.Where(reindeerScored => reindeerScored.Item2 == maxDistance).ToList();
             return fastestReindeers;
+        }
+
+        private static int ReindeerTraveledAfterSeconds(int seconds, Reindeer reindeer)
+        {
+            int cycle = reindeer.FlyingTimeBeforeRest + reindeer.RestTime;
+            int numberOfCycles = seconds / cycle;
+            int distance = numberOfCycles * reindeer.FlyingTimeBeforeRest * reindeer.Speed;
+            int leftSeconds = seconds - numberOfCycles * cycle;
+            if (leftSeconds >= reindeer.FlyingTimeBeforeRest)
+            {
+                distance += reindeer.FlyingTimeBeforeRest * reindeer.Speed;
+            }
+            else if (leftSeconds > 0)
+            {
+                distance += leftSeconds * reindeer.Speed;
+            }
+
+            return distance;
         }
     }
 }
