@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdventOfCode.Toolkit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,29 +7,6 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode21
 {
-
-    class Item
-    {
-        public string Name { get; set; }
-        public int Cost { get; set; }
-        public int Damage { get; set; }
-        public int Armor { get; set; }
-        public Item(string name, int cost, int damage, int armor)
-        {
-            Name = name;
-            Cost = cost;
-            Damage = damage;
-            Armor = armor;
-        }
-    }
-
-    class Player
-    {
-        public int HitPoints { get; set; }
-        public int Damage { get; set; }
-        public int Armor { get; set; }
-    }
-
     class Program
     {
 
@@ -62,87 +40,34 @@ namespace AdventOfCode21
                 new Item ("Defense + 3",   80,     0,       3)
             };
 
-            var min = int.MaxValue;
-            var max = int.MinValue;
-            weapons.ForEach(weapon =>
-              armors.ForEach(armor =>
-               rings.ForEach(firstRing =>
-                rings.ForEach(secondRing =>
-                {
-                    if (firstRing == secondRing)
-                    {
-                        return;
-                    }
-                    var moneySum = weapon.Cost + armor.Cost + firstRing.Cost + secondRing.Cost;
-                    if (Simulate(weapon, armor, firstRing, secondRing))
-                    {
-                        //fight won
-                        if (min > moneySum)
-                        {
-                            min = moneySum;
-                            System.Console.WriteLine($"New min: {weapon.Name}, {armor.Name}, {firstRing.Name}, {secondRing.Name} : {moneySum}");
-                        }
-                    }
-                    else
-                    {
-                        //fight lost
-                        if (max < moneySum)
-                        {
-                            max = moneySum;
-                            System.Console.WriteLine($"New max: {weapon.Name}, {armor.Name}, {firstRing.Name}, {secondRing.Name} : {moneySum}");
-                        }
-                    }
-                }))));
+            /* FIRST PART */
+            var minMax = weapons
+                .Product(armors, rings, rings)
+                .Where((items) => new Simulation(items).Winner == Winner.PLAYER)
+                .MinMaxElement((items) => ItemsCost(items));
+            
+            PrintItems(minMax.Item1);
+            System.Console.WriteLine($"Minimum: {ItemsCost(minMax.Item1)}");
 
-            System.Console.WriteLine($"Minimum: {min}");
-            System.Console.WriteLine($"Maximum: {max}");
+            /* SECOND PART */
+            minMax = weapons
+                .Product(armors, rings, rings)
+                .Where((items) => new Simulation(items).Winner == Winner.BOSS)
+                .MinMaxElement((items) => ItemsCost(items));
+            PrintItems(minMax.Item2);
+            System.Console.WriteLine($"Maximum: {ItemsCost(minMax.Item2)}");
+
             System.Console.ReadLine();
         }
 
-        private static bool Simulate(Item weapon, Item armor, Item firstRing, Item secondRing)
-        { 
-            var player = new Player {
-                HitPoints = 100,
-                Damage = weapon.Damage + armor.Damage + firstRing.Damage + secondRing.Damage,
-                Armor = weapon.Armor + armor.Armor + firstRing.Armor + secondRing.Armor
-            };
-            var boss = new Player {
-                HitPoints = 104,
-                Damage = 8,
-                Armor = 1
-            };
-            var playing = true;
-            int round = 0;
-            while(playing)
-            {
-                round++;
-                //System.Console.WriteLine($"ROUND {round}");
-                if(player.HitPoints > 0)
-                {
-                    var playerHit = player.Damage - boss.Armor;
-                    var takenHP = Math.Max(1, playerHit);
-                    boss.HitPoints -= takenHP;
-                   // System.Console.WriteLine($"Player deals {takenHP}, boss is now {boss.HitPoints}");
-                }
-                else
-                {
-                    //last turn was fatal for our player
-                    return false;
-                }
+        static void PrintItems(Tuple<Item, Item, Item, Item> items) {
+            System.Console.WriteLine($"{items.Item1.Name} {items.Item2.Name} {items.Item3.Name} {items.Item4.Name}");
+        }
 
-                if (boss.HitPoints > 0)
-                {
-                    var bossHit = boss.Damage - player.Armor;
-                    var takenHP = Math.Max(1, bossHit);
-                    player.HitPoints -= Math.Max(1, bossHit);
-                   // System.Console.WriteLine($"Boss deals {takenHP}, player is now {player.HitPoints}");
-                }
-                else {
-                    //boss is dead
-                    return true;
-                }
-            }
-            return false;
+        static int ItemsCost(Tuple<Item, Item, Item, Item> items)
+        {
+            return items.Item1.Cost + items.Item2.Cost
+                    + items.Item3.Cost + items.Item4.Cost;
         }
     }
 }
