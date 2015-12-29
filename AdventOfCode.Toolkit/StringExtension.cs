@@ -48,5 +48,28 @@ namespace AdventOfCode.Toolkit
                 throw new ArgumentException();
             return input.First().ToString().ToUpper() + String.Join("", input.Skip(1));
         }
+
+        public static IEnumerable<string> Replacements(this string molecule, IEnumerable<Tuple<string, string>> replacements)
+        {
+            for (int i = 0; i < molecule.Length; i++)
+            {
+                foreach (var replacement in replacements)
+                {
+                    var key = replacement.Item1;
+                    if (i > molecule.Length - key.Length)
+                    {
+                        continue;
+                    }
+                    var substr = molecule.Substring(i, key.Length);
+                    if (key == substr)
+                    {
+                        var before = molecule.Substring(0, i);
+                        var after = molecule.Substring(i + key.Length);
+                        //replace molecule with new one
+                        yield return before + replacement.Item2 + after;
+                    }
+                }
+            }
+        }
     }
 }

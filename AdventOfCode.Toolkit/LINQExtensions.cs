@@ -111,5 +111,22 @@ namespace AdventOfCode.Toolkit
             }
             return new Tuple<T, T>(minElem, maxElem);
         }
+
+        public static IEnumerable<T> LazyDistinct<T>(this IEnumerable<T> enumerable)
+        {
+            var set = new HashSet<T>();
+            foreach (var elem in enumerable)
+            {
+                if (set.Contains(elem))
+                {
+                    continue;
+                }
+                else
+                {
+                    set.Add(elem);
+                    yield return elem;
+                }
+            }
+        }
     }
 }
