@@ -51,9 +51,9 @@ namespace AdventOfCode.Toolkit
 
         public static IEnumerable<string> Replacements(this string molecule, IEnumerable<Tuple<string, string>> replacements)
         {
-            for (int i = 0; i < molecule.Length; i++)
+            foreach (var replacement in replacements)
             {
-                foreach (var replacement in replacements)
+                for (int i = 0; i < molecule.Length; i++)
                 {
                     var key = replacement.Item1;
                     if (i > molecule.Length - key.Length)

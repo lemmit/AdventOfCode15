@@ -13,7 +13,7 @@ namespace AdventOfCode.Toolkit
             return listToClone.Select(item => (T)item.Clone()).ToList();
         }
 
-        private static Random rng = new Random();
+        private static Random rng = new Random(Guid.NewGuid().GetHashCode());
         public static void Shuffle<T>(this IList<T> list)
         {
             int n = list.Count;
@@ -65,5 +65,6 @@ namespace AdventOfCode.Toolkit
             }
             Console.WriteLine(strBuilder.ToString().PadLeft(padding));
         }
+        
     }
 }
